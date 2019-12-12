@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+    .box{
+        height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin: 0;
+        background: #eee;
+    }    
+    
+    #myc{
+        background: rgb(255, 255, 255);
+        box-shadow: 0px 0px 20px #ccc;
+        max-width: 100%;
+        /* color: rgb(233, 44, 44); */
+    }
+    </style>
+</head>
+<body class="box">
+    <canvas id="myc"></canvas>
+
+    
+
+
+    <script>
+    var canvas = document.getElementById('myc')
+    var ctx = canvas.getContext("2d")
+    var blockWidth = 200
+    const PI = Math.PI
+    const PI2 = Math.PI*2
+
+    canvas.width = blockWidth*5  //畫布寬
+    canvas.height = blockWidth*3  //畫布
+
+    var color = {
+        red: "rgb(233, 44, 44)",
+        white: "rgb(255, 252, 252)",
+        yellow: "rgb(255, 252, 61)",
+        blue: "rgb(61, 194, 255)",
+        black:"rgb(10, 10, 10)"
+    }
+
+     
+    function drawBlock(pos,bgColor,draw,time){
+        ctx.save()
+        ctx.translate(pos.x*blockWidth,pos.y*blockWidth)
+        ctx.fillStyle = bgColor
+        ctx.fillRect(0,0,blockWidth,blockWidth)
+        ctx.translate(100,100)
+        draw()
+        ctx.restore()
+    }
+
+    var time = 0
+    function draw(){
+        time++
+        let stime = parseInt(time/20)
+        drawBlock({x:0,y:0},color.white,function(){
+            // ctx.beginPath()
+            // ctx.arc(0,0,30/((stime%3)+1),0,PI2)
+            // ctx.strokeStyle="red"
+            // ctx.lineWidth=15
+            // ctx.stroke()
+            for(var i=0;i<8;i++){
+                ctx.fillStyle=(stime%8==i)?color.black:"red"
+                if((i+stime)%4!=0){
+                  ctx.fillRect(60,-4,20,8)  
+                }
+                
+                ctx.rotate(PI2/8)
+            }
+
+        },time)
+        drawBlock({x:1,y:0},color.red,function(){
+            for(var i=0;i<8;i++){
+                ctx.fillStyle=(stime%8==i)?color.white:"black"
+                // ctx.fillStyle=color.white
+                ctx.fillRect(20,-1,time%60,2)
+                ctx.rotate(PI2/8)
+            }
+          
+        },time)
+        drawBlock({x:2,y:0},color.white,function(){
+            ctx.rotate(PI2/8)
+            for(var i=0;i<2;i++){
+                ctx.fillStyle=color.red
+                ctx.fillRect(20,-1,time%120,2)
+                ctx.rotate(PI2/4)
+            }
+            ctx.beginPath()
+            ctx.arc(stime%5,stime%5,30,0,PI2)
+            ctx.fillStyle="red"
+            ctx.fill()
+        },time)
+        drawBlock({x:3,y:0},color.red,function(){
+            ctx.rotate(PI2/8)
+            for(var i=0;i<4;i++){
+                ctx.fillStyle=color.white
+                ctx.fillRect(45,-45,30,30)
+                ctx.fillRect(45,15,30,30)
+                ctx.fillStyle=(stime%4==i)?color.white:"rgb(233, 44, 44)"
+                // ctx.fillStyle=color.red
+                ctx.fillRect(15,-15,30,30)
+                // ctx.fillRect(75,-95,20,20)
+                ctx.rotate(PI2/4)
+            }
+
+        },time)
+        drawBlock({x:4,y:0},color.white,function(){
+            for(var i=0;i<4;i++){
+                ctx.fillStyle=color.red
+                ctx.fillRect(45,0,30,(stime%4==i)?100:(time%50)+50)
+                ctx.rotate(PI2/4)
+            }
+
+        },time)
+        drawBlock({x:0,y:1},color.red,function(){
+            ctx.beginPath()
+            ctx.arc(-20,40,time%50,PI,PI2)
+            ctx.strokeStyle="white"
+            ctx.lineWidth=stime%20
+            ctx.stroke()
+            ctx.beginPath()
+            ctx.arc(20,40,time%50,PI,PI2)
+            ctx.strokeStyle="white"
+            ctx.lineWidth=stime%20
+            ctx.stroke()
+            ctx.rotate(PI2/2)
+            ctx.beginPath()
+            ctx.arc(0,40,time%50,PI,PI2)
+            ctx.strokeStyle="white"
+            ctx.lineWidth=stime%20
+            ctx.stroke()
+
+        },time)
+        drawBlock({x:1,y:1},color.white,function(){
+            for(var i=0;i<4;i++){
+            ctx.rotate(PI2/4)
+            ctx.beginPath()
+            ctx.strokeStyle=color.red
+            ctx.lineWidth=stime%10
+            ctx.moveTo(0,0);
+            ctx.lineTo(0,time%50);
+            ctx.lineTo(50,50);         
+            ctx.stroke();      
+            }
+
+                     
+            
+        },time)
+        drawBlock({x:2,y:1},color.red,function(){
+            for (var i=1;i<6;i++){ // Loop through rings (from inside to out)
+            ctx.save();
+            ctx.fillStyle = `rgb(${time%256}, 0, 0 )`;
+
+            for (var j=0;j<i*6;j++){ // draw individual dots
+            ctx.rotate(PI2/(i*3));
+            ctx.beginPath();
+            ctx.arc(0,i*12.5,5,0,PI2);
+            ctx.fill();
+            }
+
+            ctx.restore();
+            }
+        },time)
+        drawBlock({x:3,y:1},color.white,function(){
+            for (var i=1;i<3;i++){ // Loop through rings (from inside to out)
+            ctx.save();
+            for (var j=0;j<i*6;j++){ // draw individual dots
+            ctx.rotate(PI2/12);
+            ctx.beginPath()
+            ctx.arc(time%30,time%60,5,0,PI2)
+            ctx.fillStyle="red"
+            ctx.fill()
+            }
+
+            ctx.restore();
+            }  
+
+        },time)
+        drawBlock({x:4,y:1},color.red,function(){
+            ctx.rotate(PI2/8)
+            ctx.beginPath()
+            ctx.arc(-20,40,time%50,PI,PI2)
+            ctx.strokeStyle="white"
+            ctx.lineWidth=20
+            ctx.stroke()
+            ctx.beginPath()
+            ctx.arc(10,80,time%50,PI,PI2)
+            ctx.strokeStyle="white"
+            ctx.lineWidth=20
+            ctx.stroke()
+            ctx.beginPath()
+            ctx.arc(10,0,time%50,PI,PI2)
+            ctx.strokeStyle="white"
+            ctx.lineWidth=20
+            ctx.stroke()
+ 
+        },time)
+        drawBlock({x:0,y:2},color.white,function(){
+            // ctx.fillStyle = `rgb(${time%256}, 0, 0 )`;
+            ctx.font = '25pt Arial';
+            for(var i=0;i<18;i++){
+            ctx.fillStyle=(stime%18==i || stime%9==i)?'white':`rgb(${time%256}, 0, 0 )`
+            ctx.rotate(PI2/8)    
+            ctx.fillText('*', i*5, i*3);
+            }
+
+           
+
+        },time)
+        drawBlock({x:1,y:2},color.red,function(){
+            for (var i=1;i<3;i++){ // Loop through rings (from inside to out)
+            ctx.save();
+            for (var j=0;j<i*6;j++){ // draw individual dots
+            ctx.rotate(PI2/6)
+            ctx.beginPath()
+            ctx.arc(time%50,40,time%50,PI,PI2)
+            ctx.strokeStyle="white"
+            ctx.lineWidth=5
+            ctx.stroke()
+            }
+
+            ctx.restore();
+            }
+
+        },time)
+        drawBlock({x:2,y:2},color.white,function(){
+            ctx.beginPath()
+            ctx.arc(0,0,50,(time%100)/100*PI2,(time%50)/50*PI2)
+            ctx.strokeStyle=color.red
+            ctx.lineWidth=10
+            ctx.stroke()
+            
+        },time)
+        drawBlock({x:3,y:2},color.red,function(){
+            for (var i=1;i<2;i++){ // Loop through rings (from inside to out)
+            ctx.save();
+            for (var j=0;j<i*6;j++){ // draw individual dots
+            ctx.rotate(PI2/6)
+            ctx.beginPath()
+            ctx.arc(0,40,time%50,0,PI2)
+            ctx.strokeStyle="white"
+            ctx.lineWidth=10
+            ctx.stroke()
+            }
+
+            ctx.restore();
+            }
+        },time)
+        drawBlock({x:4,y:2},color.white,function(){
+            ctx.rotate(time/10)
+            ctx.fillStyle=color.red
+            ctx.beginPath()
+            ctx.arc(0,20,time%50,0,PI2)
+            ctx.fill()
+        },time)
+        requestAnimationFrame(draw)
+    }
+    requestAnimationFrame(draw)
+
+    
+        
+
+    
+    </script>
+    
+</body>
+</html>
